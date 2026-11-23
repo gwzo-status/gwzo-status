@@ -1,0 +1,34 @@
+# Spiegelt diese Seite in das Repo "status" (Custom Domain status.leibniz-gwzo.de).
+# Dieses Repo selbst bleibt OHNE Custom Domain, damit gwzo-status.github.io
+# auch bei DNS-Manipulation erreichbar bleibt und nicht weiterleitet.
+name: Spiegel nach status.leibniz-gwzo.de
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spiegeln:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inhalt mit CNAME ins Spiegel-Repo pushen
+        env:
+          DEPLOY_KEY: ${{ secrets.SPIEGEL_DEPLOY_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+          rm -rf .git .github
+          echo "status.leibniz-gwzo.de" > CNAME
+          git init -q -b main
+          git add -A
+          git -c user.name="statusbot" -c user.email="statusbot@users.noreply.github.com" \
+              commit -q -m "Spiegel von ${GITHUB_SHA::7}"
+          git push --force git@github.com:Leibniz-GWZO/status.git main
