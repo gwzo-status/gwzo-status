@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.title }}</title>
+  <!-- Alles liegt im Repo: keine externen Schriften, Skripte oder Bilder von leibniz-gwzo.de einbinden. -->
+  <style>
+    :root { --ci: #8a1538; } /* CI-Farbe des GWZO eintragen */
+    body { font-family: Arial, Helvetica, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
+    header { display: flex; align-items: center; gap: 1rem; border-bottom: 3px solid var(--ci); padding-bottom: .5rem; }
+    header img { height: 48px; }
+    header h1 { font-size: 1.4rem; margin: 0; }
+    .lage { padding: .75rem 1rem; border-radius: 4px; font-weight: bold; margin: 1.5rem 0 1rem; }
+    .normal   { background: #e2efda; }
+    .stoerung { background: #fff2cc; }
+    .notfall  { background: #ffc7ce; }
+    footer { margin-top: 3rem; font-size: .85rem; color: #666; border-top: 1px solid #ddd; padding-top: .5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/assets/logo.svg" alt="GWZO">
+    <h1>IT-Status</h1>
+  </header>
+
+  <div class="lage {{ page.lage }}">{{ page.lage_text }} · Stand: {{ page.stand }}</div>
+
+  {{ content }}
+
+  <footer>
+    Diese Seite wird unabhängig von der IT des GWZO betrieben.<br>
+    Adressen: https://status.leibniz-gwzo.de · Ersatzadresse: https://gwzo-status.github.io
+  </footer>
+</body>
+</html>
